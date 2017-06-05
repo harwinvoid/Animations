@@ -18,90 +18,32 @@ import {
 export default class animations extends Component {
   constructor() {
     super();
-    this.animatedValue = new Animated.Value(0);
+    this.springValue = new Animated.Value(0.3);
   }
-  componentDidMount() {
-    this.animate();
-  }
-  animate() {
-    this.animatedValue.setValue(0);
-    Animated.timing(
-      this.animatedValue,
+  spring() {
+    this.springValue.setValue(0.3);
+    Animated.spring(
+      this.springValue,
       {
         toValue: 1,
-        duration: 2000,
-        easing: Easing.linear,
+        friction: 1
       }
-    ).start(() => this.animate())
+    ).start();
   }
   render() {
-    const marginLeft = this.animatedValue.interpolate({
-      inputRange: [0, 1],
-      outputRange: [0, 300],
-    });
-    const opacity = this.animatedValue.interpolate({
-      inputRange: [0, 0.5, 1],
-      outputRange: [0, 1, 0],
-    });
-    const movingMargin = this.animatedValue.interpolate({
-      inputRange: [0, 0.5, 1],
-      outputRange: [0, 300, 0],
-    });
-    const textSize = this.animatedValue.interpolate({
-      inputRange: [0, 0.5, 1],
-      outputRange: [18, 32, 18],
-    });
-    const rotateX = this.animatedValue.interpolate({
-      inputRange: [0, 0.5, 1],
-      outputRange: ['0deg', '180deg', '0deg']
-    });
     return (
       <View style={styles.container}>
-        <Animated.View
+        <Text
           style={{
-            marginLeft,
-            height: 30,
-            width: 40,
-            backgroundColor: 'red',
+            marginBottom: 100
           }}
-        />
-        <Animated.View
-          style={{
-            opacity,
-            marginTop: 10,
-            width: 40,
-            height: 30,
-            backgroundColor: 'blue',
-          }}
-        />
-        <Animated.View
-          style={{
-            marginLeft: movingMargin,
-            marginTop: 10,
-            height: 30,
-            width: 40,
-            backgroundColor: 'orange',
-          }}
-        />
-        <Animated.Text
-          style={{
-            fontSize: textSize,
-            marginTop: 10,
-            color: 'green'
-          }}>
-          Animated Text
-        </Animated.Text>
-        <Animated.View
-          style={{
-            transform: [{ rotateX }],
-            marginTop: 50,
-            height: 30,
-            width: 40,
-            backgroundColor: 'black'
-          }}
+          onPress={this.spring.bind(this)}
         >
-          <Text style={{ color: 'white' }}>Hello from TransformX</Text>
-        </Animated.View>
+          Spring
+        </Text>
+        <Animated.Image
+          style={{ width: 227, height: 200, transform: [{ scale: this.springValue }] }}
+          source={{ uri: 'https://s3.amazonaws.com/media-p.slid.es/uploads/alexanderfarennikov/images/1198519/reactjs.png' }} />
       </View>
     );
   }
